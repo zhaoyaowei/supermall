@@ -19,6 +19,7 @@ export default {
     line-height: 44px;
     text-align: center;
     box-shadow: 0px 1px 1px rgba(100, 100, 100, .1);
+    z-index: 9;
   }
 
   .left, .right {
