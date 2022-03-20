@@ -1,6 +1,9 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="" srcset="">
+    <!-- @load 表示在vue中监听图片完成事件  Image对象的load事件回调，当图片加载完成后执行onload绑定的函数-->
+    <!-- GoodsListItem子组件->GoodsList父组件-> home 爷组件  涉及到非父子组件通信 通过vuex或者事件总线-->
+    <!-- bus总线、Vue.prototype.$bus = new Vue() 发送this.$bus.$emit('事件名称'，参数) 接收this.$bus.$on('事件名称'，回调函数)  -->
+    <img :src="goodsItem.show.img" alt="" srcset="" @load="imageLoad">
     <div class="goods-info"> 
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -19,11 +22,18 @@ export default {
         return {}
       }
     }
+  },
+  methods: {
+    imageLoad() {
+      console.log('监听图片事件');
+      // 发送图片加载完成事件
+      this.$bus.$emit('itemImageLoad')
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
   .goods-item {
     padding-bottom: 40px;
     /* 相对布局   子绝父相*/

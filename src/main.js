@@ -9,6 +9,9 @@ Vue.config.productionTip = false
 // 使用createApp返回一个提供应用上下文的应用实例。应用实例挂载的整个组件树共享同一个上下文。
 // createApp(App).use(router).mount('#App')
 
+// $bus默认为空，故在原型js中设置1个vue实例作为事件总线
+Vue.prototype.$bus = new Vue()
+
 //vue2写法：
 new Vue({
     render: h => h(App),

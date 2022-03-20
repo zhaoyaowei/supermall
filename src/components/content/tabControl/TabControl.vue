@@ -35,7 +35,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .tab-control {
     display: flex;
     text-align: center;
@@ -44,7 +44,7 @@ export default {
     line-height: 40px;
     /* 透明 */
     background-color: #fff; 
-    z-index: 5;
+    /* z-index: 5; */
   }
 
   .tab-control-item {
