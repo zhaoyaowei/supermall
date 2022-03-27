@@ -1,4 +1,6 @@
 <template>
+  <!-- 当 content 的高度不超过父容器的高度，是不能滚动的，
+  而它一旦超过了父容器（wrapper）的高度，我们就可以滚动内容区了 -->
   <div class="wrapper" ref="wrapper">
     <div class="content">
       <slot></slot>
@@ -77,6 +79,11 @@
         console.log('调用refresh刷新scrollerHeight');
         this.scroll && this.scroll.refresh()
       }
+      //获取滚动的高度
+      // getScrollY() {
+      //   // 有值时，返回值；无值时，返回0
+      //   return this.scroll ? this.scroll.y : 0
+      // }
     }
   }
 </script>

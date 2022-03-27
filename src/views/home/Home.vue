@@ -73,12 +73,30 @@
         isShowBackTop: false,
         tabOffsetTop: 0,
         isTabFixed: false
+        // savaY: 0
       }
     },
     computed: {
       showGoods() {
         return this.goods[this.currentType].list
       }
+    },
+    destroyed() {
+      // 离开页面时，销毁事件或函数
+      console.log('Home主页destroyed销毁')
+    },
+    // 注意：只有当组件在 <keep-alive> 内被切换，才会有activated 和 deactivated 这两个钩子函数
+    activated() {
+      //bug：3个TAB同步滚动
+      console.log('activated一进入页面被触发');
+      // this.$refs.scroll.scrollTo(0,this.savaY, 0)
+      // 重新返回时，最好刷新一次
+      // this.$refs.scroll.refrensh()
+    },
+    deactivated() {
+      // this.savaY = this.$refs.scroll.getScrollY()
+      console.log('deactivated一离开页面被触发,离开时的位置');
+
     },
     created() {
       //this = 这个组件的变量
@@ -102,12 +120,18 @@
         // this.$refs.scroll.refresh()
         refresh()
         console.log('监听图片加载完成');
-      })
+      }),
 
       // //2: 获取tabControl的offsetTop
       // //所有组件都有1个属性$el: 用于获取组件中的元素；this.$refs.tabControl获取子组件对象
       // this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
 
+      function() {
+        setTimeout(() => {
+          this.handleDom();
+          this.startTimer();
+        }, 5000)
+      }
     },
     methods: {
       /**

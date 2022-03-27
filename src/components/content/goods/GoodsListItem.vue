@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <!-- @load 表示在vue中监听图片完成事件  Image对象的load事件回调，当图片加载完成后执行onload绑定的函数-->
     <!-- GoodsListItem子组件->GoodsList父组件-> home 爷组件  涉及到非父子组件通信 通过vuex或者事件总线-->
     <!-- bus总线、Vue.prototype.$bus = new Vue() 发送this.$bus.$emit('事件名称'，参数) 接收this.$bus.$on('事件名称'，回调函数)  -->
@@ -28,6 +28,18 @@ export default {
       console.log('监听图片事件');
       // 发送图片加载完成事件
       this.$bus.$emit('itemImageLoad')
+    },
+    itemClick() {
+      console.log('监听点击跳转至详情页');
+      // 此处不用replace，因为需要返回上一级
+      this.$router.push('/detail/' + this.goodsItem.iid) 
+      // query方式
+      // this.$router.push({
+      //   path: '/detail',
+      //   query: {
+          
+      //   }
+      // })
     }
   }
 }
