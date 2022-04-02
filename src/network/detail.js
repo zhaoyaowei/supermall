@@ -9,6 +9,12 @@ export function getDetail(iid) {
     }) 
 }
 
+export function getRecommend() {
+  return request({
+    url: '/recommend',
+  })
+}
+
 // 商品基本信息封装
 export class Goods {
   // 构造函数，复杂数据封装到类，面向对象开发
@@ -39,7 +45,7 @@ export class ShopInfo {
 export class GoodsParam {
   constructor(info, rule) {
     //注: images可能没有值(某些商品有值, 某些没有值)
-    this.image = info.image ? info.image[0] : ''
+    this.image = info.images ? info.images[0] : ''
     this.infos = info.set
     this.rules = rule.tables
   }

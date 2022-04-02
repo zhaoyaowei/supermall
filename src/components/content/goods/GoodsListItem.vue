@@ -3,7 +3,7 @@
     <!-- @load 表示在vue中监听图片完成事件  Image对象的load事件回调，当图片加载完成后执行onload绑定的函数-->
     <!-- GoodsListItem子组件->GoodsList父组件-> home 爷组件  涉及到非父子组件通信 通过vuex或者事件总线-->
     <!-- bus总线、Vue.prototype.$bus = new Vue() 发送this.$bus.$emit('事件名称'，参数) 接收this.$bus.$on('事件名称'，回调函数)  -->
-    <img :src="goodsItem.show.img" alt="" srcset="" @load="imageLoad">
+    <img :src="showImage" alt="" srcset="" @load="imageLoad">
     <div class="goods-info"> 
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -23,11 +23,27 @@ export default {
       }
     }
   },
+  computed: {
+    // 主页商品数据和详情页推荐数据中的图片获取方式不同
+    showImage() {
+      return this.goodsItem.image || this.goodsItem.show.img
+    }
+  },
   methods: {
     imageLoad() {
       console.log('监听图片事件');
       // 发送图片加载完成事件
       this.$bus.$emit('itemImageLoad')
+      // 方法2：进入详情，首页不需要再监听这个事件，反之亦然，采用方法2，离开的时候，取消全局事件的监听$off,
+      // 但是不能只传事件，需要告诉它取消哪个函数，所以抽取函数
+
+
+      //方法1：通过路由区别主页和详情页图片加载完成的事件发送 
+      // if (this.$route.path.indexOf('/home')) {
+      //   this.$bus.$emit('homeItemImageLoad')
+      // } else  if (this.$route.path.indexOf('/detail')) {
+      //   this.$bus.$emit('detailItemImageLoad')
+      // }
     },
     itemClick() {
       console.log('监听点击跳转至详情页');

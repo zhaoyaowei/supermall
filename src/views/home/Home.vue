@@ -43,8 +43,7 @@
   import BackTop from 'components/content/backTop/BackTop'
 
   import { getHomeMultidata, getHomeGoods } from "network/home"
-  import {debounce} from 'common/utils'
-
+  import {itemImgListenrMiin} from 'common/mixin'
 
 
   export default {
@@ -59,6 +58,7 @@
       Scroll,
       BackTop
     },
+    mixins: [itemImgListenrMiin],
     data () {
       return {
         // result: null   //不会被回收
@@ -97,6 +97,8 @@
       // this.savaY = this.$refs.scroll.getScrollY()
       console.log('deactivated一离开页面被触发,离开时的位置');
 
+      // 1: 离开时取消全局事件的监听，不能传事件，否则都会被取消掉，所以取消函数（在mounted中）
+      this.$bus.$off('itemImageLoad', this.itemImgListener)
     },
     created() {
       //this = 这个组件的变量
@@ -115,23 +117,27 @@
       //1: 图片加载完成的事件监听
       //监听GoodsListItem中的图片加载完成, 再执行回调函数refresh()
       //将refresh函数传入到debounce函数中，生成1个新的函数
-      const refresh = debounce(this.$refs.scroll.refresh, 500)
-      this.$bus.$on('itemImageLoad', () => {
-        // this.$refs.scroll.refresh()
-        refresh()
-        console.log('监听图片加载完成');
-      }),
+      // const refresh = debounce(this.$refs.scroll.refresh, 500)
+
+      //新写法，对监听的事件进行保存，变量中保存了函数，最后离开时取消掉,见mixin.js混入
+
+      // 旧写法
+      // this.$bus.$on('itemImageLoad', () => {
+      //   // this.$refs.scroll.refresh()
+      //   console.log('监听图片加载完成后，执行refresh函数');
+      //   refresh()
+      // }),
 
       // //2: 获取tabControl的offsetTop
       // //所有组件都有1个属性$el: 用于获取组件中的元素；this.$refs.tabControl获取子组件对象
       // this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
 
-      function() {
-        setTimeout(() => {
-          this.handleDom();
-          this.startTimer();
-        }, 5000)
-      }
+      // function() {
+      //   setTimeout(() => {
+      //     this.handleDom();
+      //     this.startTimer();
+      //   }, 5000)
+      // }
     },
     methods: {
       /**

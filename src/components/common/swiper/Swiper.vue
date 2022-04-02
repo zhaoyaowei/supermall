@@ -1,6 +1,6 @@
 <template>
     <div id="hy-swiper">
-      <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
+      <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd" ref="swiper">
         <slot></slot>
       </div>
       <slot name="indicator">
@@ -41,26 +41,49 @@
         swiperStyle: {}, // swiper样式
         currentIndex: 1, // 当前的index
         scrolling: false, // 是否正在滚动
+        playTimer: null,  //定时器
       }
     },
-    mounted: function () {
+    // mounted: function () {
+    //   // 1.操作DOM, 在前后添加Slide
+    //   setTimeout(() => {
+    //     this.handleDom();
+
+    //     // 2.开启定时器
+    //     this.startTimer();
+    //   }, 100)
+    // },
+    // 修复轮播图不滚动的问题
+    // 我觉得并不是你说的问题.你忘记了吗?vue是响应式的,也就是数据更新了页面也会跟着改变.
+    // 所以这个问题就不是vue的问题,而是老师他js代码写的有问题,他设置了一个定时器在mounted中.
+    // 定时器第一行代码的作用是为了获取当前页面的swiperitem数量,但是由于是异步请求,
+    // 100ms过去了后端的数据还没有传过来,但是定时器已经执行了,所以swiperitem数量=0.
+    // 后面数据更新了,获取swiperitem数量的方法没有再次被执行,swiperitem的数量还是等于0,这样怎么可能轮播的了.
+    // 还有层主说的方法我觉得治标不治本,如果服务器响应超过200ms呢?不也一样动不了.
+    // 所以我的解决方案是把mounted这个钩子函数里面的东西注释掉,去用updated这个东西.
+    updated: function () {
       // 1.操作DOM, 在前后添加Slide
-      setTimeout(() => {
+      if (this.slideCount === 0 && this.playTimer === null) {
+        setTimeout(() => {
         this.handleDom();
 
         // 2.开启定时器
         this.startTimer();
       }, 100)
+      }
     },
     methods: {
 		  /**
        * 定时器操作
        */
       startTimer: function () {
-		    this.playTimer = window.setInterval(() => {
-		      this.currentIndex++;
-		      this.scrollContent(-this.currentIndex * this.totalWidth);
-        }, this.interval)
+        if (this.playTimer === null) {
+          this.playTimer = window.setInterval(() => {
+            this.currentIndex++;
+            this.scrollContent(-this.currentIndex * this.totalWidth);
+          }, this.interval)
+          console.log('定时器状态：',this.playTimer,);
+        }
       },
       stopTimer: function () {
         window.clearInterval(this.playTimer);
@@ -118,7 +141,8 @@
        */
 		  handleDom: function () {
         // 1.获取要操作的元素
-        let swiperEl = document.querySelector('.swiper');
+        // let swiperEl = document.querySelector('.swiper');
+        let swiperEl = this.$refs.swiper
         let slidesEls = swiperEl.getElementsByClassName('slide');
 
         // 2.保存个数
@@ -161,26 +185,35 @@
 
         // 2.设置当前的位置
         this.setTransform(moveDistance);
+        // 拖动时设置为滚动状态
+        this.scrolling = true
       },
 
       touchEnd: function (e) {
-        // 1.获取移动的距离
-        let currentMove = Math.abs(this.distance);
+        if (this.scrolling) {
+          // 如果在滚动的时候
+          console.log('滚动状态：',this.scrolling);
+          // 1.获取移动的距离
+          let currentMove = Math.abs(this.distance);
 
-        // 2.判断最终的距离
-        if (this.distance === 0) {
-          return
-        } else if (this.distance > 0 && currentMove > this.totalWidth * this.moveRatio) { // 右边移动超过0.5
-          this.currentIndex--
-        } else if (this.distance < 0 && currentMove > this.totalWidth * this.moveRatio) { // 向左移动超过0.5
-          this.currentIndex++
+          // 2.判断最终的距离
+          if (this.distance === 0) {
+            return
+          } else if (this.distance > 0 && currentMove > this.totalWidth * this.moveRatio) { // 右边移动超过0.5
+            this.currentIndex--
+          } else if (this.distance < 0 && currentMove > this.totalWidth * this.moveRatio) { // 向左移动超过0.5
+            this.currentIndex++
+          }
+
+          // 3.移动到正确的位置
+          this.scrollContent(-this.currentIndex * this.totalWidth);
+          // 把定时器恢复至默认状态
+          this.playTimer = null
         }
-
-        // 3.移动到正确的位置
-        this.scrollContent(-this.currentIndex * this.totalWidth);
-
         // 4.移动完成后重新开启定时器
         this.startTimer();
+        console.log('滚动状态：',this.scrolling);
+        console.log('定时器状态：',this.playTimer);
       },
 
       /**
