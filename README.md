@@ -27,5 +27,4 @@ git clone https://github.com/zhaoyaowei/supermall.git
 
 git status --> git add . --> git commit -m "说明" --> git push "https://github.com/zhaoyaowei/supermall.git"
 
-
-vscode://vscode.github-authentication/did-authenticate?windowid=1&code=62103adeb604fdbeeb5f&state=d95f5e70-1453-44c4-93a0-e5787b342c64
+git push git@github.com:zhaoyaowei/supermall.git             

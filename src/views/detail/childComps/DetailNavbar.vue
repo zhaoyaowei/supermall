@@ -33,6 +33,7 @@ import NavBar from '@/components/common/navbar/NavBar.vue'
     methods: {
       itemClick(index) {
         this.currentIndex = index
+        this.$emit('titleClick', index)
       },
 
       backClick() {

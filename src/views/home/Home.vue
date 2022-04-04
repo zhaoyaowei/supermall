@@ -43,7 +43,8 @@
   import BackTop from 'components/content/backTop/BackTop'
 
   import { getHomeMultidata, getHomeGoods } from "network/home"
-  import {itemImgListenrMiin} from 'common/mixin'
+  import {itemImgListenrMixin, backTopMixin} from 'common/mixin'
+  import {POP, NEW, SELL} from 'common/const'
 
 
   export default {
@@ -58,7 +59,7 @@
       Scroll,
       BackTop
     },
-    mixins: [itemImgListenrMiin],
+    mixins: [itemImgListenrMixin, backTopMixin],
     data () {
       return {
         // result: null   //不会被回收
@@ -70,7 +71,6 @@
           'sell': { page: 0, list: []}
         },
         currentType: 'pop',
-        isShowBackTop: false,
         tabOffsetTop: 0,
         isTabFixed: false
         // savaY: 0
@@ -107,9 +107,9 @@
       //不要在creat中获取元素$ref或者document.queryselector()
       this.getHomeMultidata()
       //2.请求商品数据
-      this.getHomeGoods('pop', 1)
-      this.getHomeGoods('new', 1)
-      this.getHomeGoods('sell', 1)
+      this.getHomeGoods(POP)
+      this.getHomeGoods(NEW)
+      this.getHomeGoods(SELL)
 
 
     },
@@ -150,13 +150,13 @@
         //case穿透
         switch(index) {
           case 0:
-            this.currentType = 'pop';
+            this.currentType = POP;
             break;
           case 1:
-            this.currentType = 'new';
+            this.currentType = NEW;
             break;
           case 2:
-            this.currentType = 'sell';
+            this.currentType = SELL;
             break;
         }
         //bug解决，两个tabControl当前的index不同步
@@ -173,9 +173,9 @@
       
       //监听滚动位置
       contentScroll(position) {
-        console.log(position);
+        // console.log(position);
         //1.监听并决定控件隐藏和展示，负值取反 大于1000，更改属性值为true
-        this.isShowBackTop = (-position.y) > 1000
+        this.listenShowBackTop(position)
 
         //2.决定tabControl是否吸顶(position: fixed)
         this.isTabFixed = (-position.y) > this.tabOffsetTop
@@ -210,7 +210,7 @@
       },
       getHomeGoods(type) {
         let page = this.goods[type].page + 1
-        getHomeGoods(type, 1).then(res => {
+        getHomeGoods(type, page).then(res => {
           console.log(res);
           //添加数组数据
           //1. for常规方法
