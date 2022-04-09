@@ -4,6 +4,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import FastClick from 'fastclick'
+import VueLazyload from 'vue-lazyload'
+
+import toast from './components/common/toast'
+
 Vue.config.productionTip = false
 //vue3写法：createApp(App).use(store).use(router).mount('#app')
 // 使用createApp返回一个提供应用上下文的应用实例。应用实例挂载的整个组件树共享同一个上下文。
@@ -11,6 +16,16 @@ Vue.config.productionTip = false
 
 // $bus默认为空，故在原型js中设置1个vue实例作为事件总线
 Vue.prototype.$bus = new Vue()
+// 安装toast插件，去调用toast的install函数，默认传值Vue
+Vue.use(toast)
+
+// 解决移动端300延迟,附加
+FastClick.attach(document.body)
+
+// 使用懒加载插件  https://github.com/hilongjw/vue-lazyload
+Vue.use(VueLazyload, {
+  loading: require('./assets/img/common/placeholder.png')
+})
 
 //vue2写法：
 new Vue({

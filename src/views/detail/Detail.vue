@@ -241,7 +241,7 @@ import {mapActions} from 'vuex'
         // 接收到promise, this.$store.dispatch = this.addCart,
         // promise = this.$store.dispatch('addCart', product)，then
         // this.$store.dispatch('addCart', product).then(res => console.log(res) )
-        this.addCart(product).then(res => console.log(res))
+        this.addCart(product).then(res => this.$toast.show(res))
       }
     }
   }

@@ -22,12 +22,12 @@ export default {
       if(oldProduct) {
         // oldProduct.count += 1;  数量+1，为方便跟踪，不在此处操作
         context.commit(ADD_COUNTER, oldProduct)
-        resolve('重复添加商品至购物车成功！')
+        resolve('重复添加成功，在购物车等亲～')
       } else {
         // payload.count = 1;   
         // context.state.cardList.push(payload)
         context.commit(ADD_TO_CART, payload)
-        resolve('添加新的商品至购物车成功！')
+        resolve('添加成功，在购物车等亲～')
       }
     })
 }

@@ -5,7 +5,7 @@
       <span class="select-text">全选</span>
     </div>
     <div class="total-price">合计: ¥{{totalPrice}}  </div>
-    <div class="to-buy">去计算({{checkLength}})</div>
+    <div class="to-buy" @click="toBuyClick">去计算({{checkLength}})</div>
   </div>
 </template>
 
@@ -61,6 +61,11 @@ import {mapGetters} from 'vuex'
       }
       // 不能使用这种写法，因为在遍历时互相影响了
       //this.cardList.forEach(item  => item.checked = !this.isSelectAll)   
+    },
+    toBuyClick(){
+      if(this.checkLength == 0) {
+        this.$toast.show('请选择您要购买的商品，亲～')
+      }
     }
   }
   }
