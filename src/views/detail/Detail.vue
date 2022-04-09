@@ -16,7 +16,7 @@
       <detail-recommend-info ref="recommend"/>
       <goods-list :goods="recommendInfo"/>
     </scroll>
-    <detail-bottom-bar/>
+    <detail-bottom-bar @addToCart="addToCart"/>
     <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
@@ -40,6 +40,7 @@ import GoodsList from 'components/content/goods/GoodsList.vue'
 import { getDetail, getRecommend, Goods, ShopInfo, GoodsParam } from 'network/detail'
 import {itemImgListenrMixin, backTopMixin} from 'common/mixin'
 import { debounce } from '@/common/utils'
+import {mapActions} from 'vuex'
 
   export default {
     name: 'Detail',
@@ -118,6 +119,7 @@ import { debounce } from '@/common/utils'
     },
 
     methods: {
+      ...mapActions(['addCart']),
       /**
        * 网络请求相关方法
        */
@@ -222,6 +224,24 @@ import { debounce } from '@/common/utils'
         // this.isShowBackTop = positionY > BACKTOP_DISTANCE
         this.listenShowBackTop(position)
 
+      },
+      // 监听加入购物车事件
+      addToCart() {
+        // 1. 获取购物车需要展示的信息
+        const product = {}
+        product.image = this.topImages[0];
+        product.title = this.goods.title;
+        product.desc = this.goods.desc;
+        product.price = this.goods.realPrice;
+        product.iid = this.iid;
+
+        // 2. 将商品添加到购物车中(1、actions可以返回1个promise   2、mapAction的映射关系)
+        // this.$store.cartList.push(product)  不建议这样做，通过mutation，commit调用mutation中的addCart方法
+        // this.$store.commit('addCart', product)  但不建议在mutian中执行复杂操作，通过actions修改
+        // 接收到promise, this.$store.dispatch = this.addCart,
+        // promise = this.$store.dispatch('addCart', product)，then
+        // this.$store.dispatch('addCart', product).then(res => console.log(res) )
+        this.addCart(product).then(res => console.log(res))
       }
     }
   }

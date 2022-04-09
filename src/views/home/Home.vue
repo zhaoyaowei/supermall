@@ -91,7 +91,7 @@
       console.log('activated一进入页面被触发');
       // this.$refs.scroll.scrollTo(0,this.savaY, 0)
       // 重新返回时，最好刷新一次
-      // this.$refs.scroll.refrensh()
+      // this.$refs.scroll.refresh()
     },
     deactivated() {
       // this.savaY = this.$refs.scroll.getScrollY()

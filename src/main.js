@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-
+import store from './store'
 
 Vue.config.productionTip = false
 //vue3写法：createApp(App).use(store).use(router).mount('#app')
@@ -15,7 +15,8 @@ Vue.prototype.$bus = new Vue()
 //vue2写法：
 new Vue({
     render: h => h(App),
-    router
+    router,
+    store
 }).$mount('#app')
 
 // 创建的vue实例没有el属性，而是在实例后面添加了一个$mount(’#app’)方法。

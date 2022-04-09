@@ -11,5 +11,13 @@ module.exports = defineConfig({
         'views': '@/views'
       }
     }
+  },
+  chainWebpack: config => {
+  config
+    .plugin('html')
+    .tap(args => {
+      args[0].title= '购物街'
+      return args
+    })
   }
 })
