@@ -33,7 +33,7 @@
     methods: {
       // 监听图片加载事件
       imgLoad() {
-        console.log('监听图片加载事件');
+        console.log('监听详情页图片加载事件');
         // 此处判断，所有图片都加载完成了，再进行一次回调即可，需要动态获取图片的个数
         // count先自加1，然后参与判断
         if (++this.count === this.imageListLength) {

@@ -17,12 +17,18 @@
     props: {
       probeType: {
         type: Number,
-        default: 0
+        default: 1
       },
       pullUpLoad: {
         type: Boolean,
         default: false
-      }
+      },
+      data: {
+		    type: Array,
+        default: () => {
+          return []
+        }
+      },
     },
     data() {
       return {
@@ -84,6 +90,11 @@
       //   // 有值时，返回值；无值时，返回0
       //   return this.scroll ? this.scroll.y : 0
       // }
+    },
+    watch: {
+		  data() {
+        setTimeout(this.refresh, 20)
+      }
     }
   }
 </script>

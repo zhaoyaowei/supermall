@@ -25,13 +25,15 @@ export default {
   },
   computed: {
     // 主页商品数据和详情页推荐数据中的图片获取方式不同
+    // this.goodsItem.img 为啥这个不能写在最后面，报错error during evaluation
     showImage() {
-      return this.goodsItem.image || this.goodsItem.show.img
+      // console.log('item:',this.goodsItem.show);  show.img必须写在后面，可能会报undefined
+      return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img
     }
   },
   methods: {
     imageLoad() {
-      console.log('监听图片事件');
+      console.log('监听详情页、分类页商品列表图片事件');
       // 发送图片加载完成事件
       this.$bus.$emit('itemImageLoad')
       // 方法2：进入详情，首页不需要再监听这个事件，反之亦然，采用方法2，离开的时候，取消全局事件的监听$off,

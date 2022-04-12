@@ -1,6 +1,8 @@
 import {debounce} from './utils'
-import {BACKTOP_DISTANCE}  from 'common/const'
-import BackTop from '../components/content/backTop/BackTop'
+import {BACKTOP_DISTANCE, POP, NEW, SELL}  from 'common/const'
+import BackTop from 'components/content/backTop/BackTop'
+import TabControl from "components/content/tabControl/TabControl"
+
 
 export const itemImgListenrMixin = {
   // 公共变量data也可以混入
@@ -23,7 +25,7 @@ export const itemImgListenrMixin = {
     }
 
     this.$bus.$on('itemImageLoad', this.itemImgListener)
-    console.log('我是监听主页和详情页动态图片的混入方法');
+    console.log('我是监听主页、详情页、分类页动态图片的混入方法');
   }
 }
 
@@ -48,6 +50,42 @@ export const backTopMixin = {
     //2. 监听并决定控件隐藏和展示，负值取反 大于1000，更改属性值为true
     listenShowBackTop(position) {
       this.isShowBackTop = -position.y > BACKTOP_DISTANCE
+    }
+  }
+}
+
+
+export const tabControlMixin = {
+  components: {
+    TabControl
+  },
+  data: function () {
+    return {
+      currentType: POP,
+      isTabFixed: false,
+      tabOffsetTop: 0,
+    }
+  },
+  methods: {
+    tabClick(index) {
+      //case穿透
+      // console.log(index);
+      switch (index) {
+        case 0:
+          this.currentType = POP
+          break
+        case 1:
+          this.currentType = NEW
+          break
+        case 2:
+          this.currentType = SELL
+          break
+      }
+      console.log(this.currentType);
+
+      //bug解决，两个tabControl当前的index不同步
+      this.$refs.tabControl1.currentIndex = index
+      this.$refs.tabControl2.currentIndex = index
     }
   }
 }

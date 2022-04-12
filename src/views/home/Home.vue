@@ -37,13 +37,12 @@
   import FeatureView from "./childComps/FeatureView"
 
   import NavBar from "components/common/navbar/NavBar"
-  import TabControl from "components/content/tabControl/TabControl"
   import GoodsList from "components/content/goods/GoodsList"
   import Scroll from 'components/common/scroll/Scroll'
   import BackTop from 'components/content/backTop/BackTop'
 
   import { getHomeMultidata, getHomeGoods } from "network/home"
-  import {itemImgListenrMixin, backTopMixin} from 'common/mixin'
+  import {itemImgListenrMixin, backTopMixin, tabControlMixin} from 'common/mixin'
   import {POP, NEW, SELL} from 'common/const'
 
 
@@ -54,12 +53,11 @@
       RecommendView,
       FeatureView,
       NavBar,
-      TabControl,
       GoodsList,
       Scroll,
       BackTop
     },
-    mixins: [itemImgListenrMixin, backTopMixin],
+    mixins: [itemImgListenrMixin, backTopMixin, tabControlMixin],
     data () {
       return {
         // result: null   //不会被回收
@@ -144,34 +142,11 @@
        * 事件监听相关方法
        */
       
-      //监听tabClick点击事件，并返回点击类型
-      tabClick(index) {
-        // console.log(index);
-        //case穿透
-        switch(index) {
-          case 0:
-            this.currentType = POP;
-            break;
-          case 1:
-            this.currentType = NEW;
-            break;
-          case 2:
-            this.currentType = SELL;
-            break;
-        }
-        //bug解决，两个tabControl当前的index不同步
-        this.$refs.tabControl1.currentIndex = index
-        this.$refs.tabControl2.currentIndex = index
+      //1、监听tabClick点击事件，并返回点击类型,混入tabControlMixin
 
-      },
-
-      //监听返回顶部按钮，并设置500毫秒返回
-      backClick() {
-        // console.log('点击回到顶部');
-        this.$refs.scroll.scrollTo(0, 0, 500)
-      },
+      //2、监听返回顶部按钮，并设置500毫秒返回,混入backTopMixin
       
-      //监听滚动位置
+      //3、监听滚动位置
       contentScroll(position) {
         // console.log(position);
         //1.监听并决定控件隐藏和展示，负值取反 大于1000，更改属性值为true
